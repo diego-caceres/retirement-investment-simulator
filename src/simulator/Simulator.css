@@ -1,0 +1,355 @@
+/* Self-contained styles for the Simulator. Everything is scoped under .fin-sim
+ * so it neither depends on nor leaks into the host app's CSS. Colors map to the
+ * host design tokens when present (var(--token, …)) and fall back to a warm dark
+ * theme otherwise — so it looks native here and stands alone elsewhere. */
+
+.fin-sim {
+  /* Host token → local var, with standalone fallbacks. */
+  --_bg-deep: var(--bg-deep, oklch(0.15 0.009 155));
+  --_surface: var(--surface, oklch(0.225 0.010 155));
+  --_surface-2: var(--surface-2, oklch(0.275 0.012 155));
+  --_border: var(--border, oklch(0.32 0.012 155));
+  --_border-strong: var(--border-strong, oklch(0.42 0.014 155));
+  --_text: var(--text, oklch(0.95 0.008 150));
+  --_text-muted: var(--text-muted, oklch(0.74 0.013 150));
+  --_text-faint: var(--text-faint, oklch(0.58 0.013 150));
+  --_accent: var(--accent, oklch(0.83 0.085 84));
+  --_accent-strong: var(--accent-strong, oklch(0.89 0.095 84));
+  --_accent-soft: var(--accent-soft, oklch(0.83 0.085 84 / 0.13));
+  --_accent-line: var(--accent-line, oklch(0.83 0.085 84 / 0.30));
+  --_on-accent: var(--on-accent, oklch(0.24 0.03 84));
+  --_pos: var(--pos, oklch(0.80 0.135 158));
+  --_neg: var(--neg, oklch(0.71 0.150 32));
+  --_neg-soft: var(--neg-soft, oklch(0.71 0.150 32 / 0.14));
+  --_radius: var(--radius, 14px);
+  --_radius-sm: var(--radius-sm, 9px);
+  --_radius-xs: var(--radius-xs, 6px);
+  --_font: var(--font-body, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif);
+  --_nums: var(--nums, ui-monospace, monospace);
+  --_shadow-card: var(--shadow-card, 0 18px 40px -24px oklch(0 0 0 / 0.7));
+
+  font-family: var(--_font);
+  color: var(--_text);
+}
+
+.fin-sim *, .fin-sim *::before, .fin-sim *::after { box-sizing: border-box; }
+
+.fin-sim--standalone {
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: clamp(1.5rem, 1rem + 2.5vw, 3.5rem);
+}
+
+/* ---------------------------------------------------------------- Header */
+.fin-sim .sim-header {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap;
+}
+.fin-sim .sim-header-actions { display: flex; gap: 0.6rem; align-items: center; flex-wrap: wrap; }
+.fin-sim .sim-badge {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 1.25rem; height: 1.25rem; padding: 0 0.35rem; margin-left: 0.1rem;
+  border-radius: 99px; background: var(--_accent-soft); color: var(--_accent-strong);
+  font-size: 0.72rem; font-weight: 700; font-variant-numeric: tabular-nums;
+}
+.fin-sim h1 { font-size: 2rem; line-height: 1.1; margin: 0; }
+.fin-sim h2 { font-size: 1.25rem; margin: 0; }
+
+/* ---------------------------------------------------------------- Layout */
+.fin-sim .sim-layout {
+  display: grid;
+  grid-template-columns: 360px 1fr;
+  gap: 1.4rem;
+  align-items: start;
+}
+@media (max-width: 900px) {
+  .fin-sim .sim-layout { grid-template-columns: 1fr; }
+}
+
+/* ----------------------------------------------------------------- Cards */
+.fin-sim .sim-card {
+  background: linear-gradient(180deg, oklch(1 0 0 / 0.018), transparent 40%), var(--_surface);
+  border: 1px solid var(--_border);
+  border-radius: var(--_radius);
+  padding: 1.4rem 1.5rem;
+  box-shadow: var(--_shadow-card);
+}
+.fin-sim .sim-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+}
+
+/* ------------------------------------------------------------- Stat blocks */
+.fin-sim .sim-stat-label {
+  font-size: 0.7rem; color: var(--_text-faint);
+  text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600;
+  margin-bottom: 0.45rem;
+}
+.fin-sim .sim-stat-value {
+  font-family: var(--_nums);
+  font-size: 1.7rem; font-weight: 600; letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums; line-height: 1.1; color: var(--_text);
+}
+.fin-sim .sim-stat-sub {
+  font-size: 0.82rem; color: var(--_text-muted);
+  font-variant-numeric: tabular-nums; margin-top: 0.3rem;
+}
+.fin-sim .sim-pos { color: var(--_pos); }
+.fin-sim .sim-accent { color: var(--_accent-strong); }
+
+/* --------------------------------------------------------------- Sections */
+.fin-sim .sim-title {
+  font-family: var(--_font);
+  font-size: 0.8rem; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.08em;
+  color: var(--_text-muted); margin: 0 0 1rem;
+}
+.fin-sim .sim-note {
+  font-size: 0.85rem; color: var(--_text-muted); margin: 0;
+}
+.fin-sim .sim-empty {
+  color: var(--_text-faint); text-align: center; padding: 2rem 1rem; font-size: 0.92rem;
+}
+
+/* ----------------------------------------------------------------- Forms */
+.fin-sim .sim-field { margin-bottom: 1rem; }
+.fin-sim label {
+  display: block; font-size: 0.8rem; font-weight: 600;
+  margin-bottom: 0.4rem; color: var(--_text-muted);
+}
+.fin-sim input, .fin-sim select {
+  width: 100%; padding: 0.58rem 0.8rem;
+  border: 1px solid var(--_border-strong); border-radius: var(--_radius-sm);
+  font-family: var(--_font); font-size: 0.9rem;
+  color: var(--_text); background: var(--_bg-deep);
+  transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+}
+.fin-sim input::placeholder { color: var(--_text-faint); }
+.fin-sim input:focus, .fin-sim select:focus {
+  outline: none; border-color: var(--_accent);
+  box-shadow: 0 0 0 3px var(--_accent-soft);
+}
+.fin-sim select option { background: var(--_surface); color: var(--_text); }
+.fin-sim input[type='number']::-webkit-inner-spin-button,
+.fin-sim input[type='number']::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+.fin-sim input[type='number'] { -moz-appearance: textfield; appearance: textfield; }
+
+.fin-sim .sim-affix { position: relative; display: flex; align-items: center; }
+.fin-sim .sim-affix > input { padding-left: 3.1rem; }
+.fin-sim .sim-affix-label {
+  position: absolute; left: 0.85rem;
+  font-size: 0.8rem; font-weight: 600; letter-spacing: 0.04em;
+  color: var(--_text-faint); pointer-events: none;
+}
+
+/* Range slider — reset fully so it doesn't inherit the input styles. */
+.fin-sim .sim-range {
+  -webkit-appearance: none; appearance: none;
+  width: 100%; height: 4px; padding: 0; border: none;
+  background: var(--_border-strong); border-radius: 99px; box-shadow: none; cursor: pointer;
+}
+.fin-sim .sim-range:focus { outline: none; box-shadow: none; }
+.fin-sim .sim-range::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none;
+  width: 16px; height: 16px; border-radius: 50%;
+  background: var(--_accent); border: 3px solid var(--_bg-deep); cursor: pointer;
+}
+.fin-sim .sim-range::-moz-range-thumb {
+  width: 14px; height: 14px; border-radius: 50%;
+  background: var(--_accent); border: 3px solid var(--_bg-deep); cursor: pointer;
+}
+
+.fin-sim .sim-divider { height: 1px; background: var(--_border); margin: 1.3rem 0 1.1rem; }
+
+/* Inline hint under a field. */
+.fin-sim .sim-hint {
+  font-size: 0.74rem; color: var(--_text-faint);
+  margin: 0.45rem 0 0; line-height: 1.4;
+}
+
+/* Checkbox row (e.g. "ajustar renta por inflación"). */
+.fin-sim .sim-check {
+  display: flex; align-items: flex-start; gap: 0.6rem;
+  margin-top: 1rem; cursor: pointer; color: var(--_text);
+  font-size: 0.85rem; font-weight: 500;
+}
+.fin-sim .sim-check input[type='checkbox'] {
+  -webkit-appearance: checkbox; appearance: checkbox;
+  width: 1.1rem; height: 1.1rem; min-width: 0; margin: 0.1rem 0 0;
+  padding: 0; border: none; box-shadow: none; background: none; flex: none;
+  accent-color: var(--_accent); cursor: pointer;
+}
+.fin-sim .sim-check input[type='checkbox']:focus { box-shadow: none; }
+.fin-sim .sim-check-note {
+  display: block; font-size: 0.74rem; font-weight: 400;
+  color: var(--_text-faint); margin-top: 0.2rem;
+}
+
+/* ----------------------------------------------------------- Aporte tramos */
+.fin-sim .sim-period {
+  border: 1px solid var(--_border); border-radius: var(--_radius-sm);
+  background: var(--_bg-deep); padding: 0.85rem 0.9rem; margin-bottom: 0.7rem;
+}
+.fin-sim .sim-period:last-child { margin-bottom: 0; }
+.fin-sim .sim-period-head { display: flex; align-items: baseline; gap: 0.5rem; margin-bottom: 0.6rem; }
+.fin-sim .sim-period-idx { font-size: 0.78rem; font-weight: 600; color: var(--_text); }
+.fin-sim .sim-period-range {
+  font-size: 0.72rem; color: var(--_text-faint);
+  font-variant-numeric: tabular-nums; letter-spacing: 0.02em;
+}
+.fin-sim .sim-period-x {
+  margin-left: auto; width: 1.4rem; height: 1.4rem;
+  display: inline-flex; align-items: center; justify-content: center;
+  border-radius: var(--_radius-xs); border: 1px solid transparent;
+  background: transparent; color: var(--_text-faint);
+  font-size: 1.1rem; line-height: 1; cursor: pointer;
+  transition: color 0.15s, background 0.15s, border-color 0.15s;
+}
+.fin-sim .sim-period-x:hover {
+  color: var(--_neg); background: var(--_neg-soft);
+  border-color: color-mix(in oklch, var(--_neg) 35%, transparent);
+}
+.fin-sim .sim-period-fields { display: grid; grid-template-columns: 90px 1fr; gap: 0.65rem; }
+.fin-sim .sim-period-fields label { font-size: 0.72rem; margin-bottom: 0.3rem; }
+.fin-sim .sim-period-fields .sim-field { margin-bottom: 0; }
+
+/* --------------------------------------------------------------- Buttons */
+.fin-sim .sim-btn {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  padding: 0.5rem 1.05rem; border-radius: var(--_radius-sm);
+  font-family: var(--_font); font-size: 0.875rem; font-weight: 600;
+  cursor: pointer; border: 1px solid transparent; white-space: nowrap;
+  transition: background 0.16s, border-color 0.16s, color 0.16s, transform 0.08s, box-shadow 0.16s;
+}
+.fin-sim .sim-btn:active { transform: translateY(1px); }
+.fin-sim .sim-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.fin-sim .sim-btn-primary {
+  background: linear-gradient(180deg, var(--_accent-strong), var(--_accent));
+  color: var(--_on-accent);
+}
+.fin-sim .sim-btn-primary:hover:not(:disabled) { filter: brightness(1.06); }
+.fin-sim .sim-btn-secondary {
+  background: var(--_surface-2); color: var(--_text); border-color: var(--_border-strong);
+}
+.fin-sim .sim-btn-secondary:hover:not(:disabled) { border-color: var(--_text-faint); }
+.fin-sim .sim-btn-danger {
+  background: transparent; color: var(--_neg);
+  border-color: color-mix(in oklch, var(--_neg) 40%, transparent);
+}
+.fin-sim .sim-btn-danger:hover:not(:disabled) { background: var(--_neg-soft); border-color: var(--_neg); }
+.fin-sim .sim-btn-sm { padding: 0.34rem 0.7rem; font-size: 0.8rem; }
+
+/* ----------------------------------------------------------------- Table */
+.fin-sim table {
+  width: 100%; border-collapse: separate; border-spacing: 0;
+  background: var(--_surface); border-radius: var(--_radius);
+  overflow: hidden; border: 1px solid var(--_border); box-shadow: var(--_shadow-card);
+}
+.fin-sim th {
+  background: oklch(0.205 0.010 155 / 0.6);
+  font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.1em;
+  font-weight: 600; color: var(--_text-faint);
+  padding: 0.7rem 1.1rem; text-align: left; border-bottom: 1px solid var(--_border);
+}
+.fin-sim td {
+  padding: 0.78rem 1.1rem; border-top: 1px solid oklch(1 0 0 / 0.04);
+  font-size: 0.9rem; color: var(--_text); font-variant-numeric: tabular-nums;
+}
+.fin-sim tbody tr:first-child td { border-top: none; }
+.fin-sim tr:hover td { background: oklch(1 0 0 / 0.025); }
+
+.fin-sim .sim-actions { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
+.fin-sim a { color: var(--_accent); text-decoration: none; }
+.fin-sim a:hover { color: var(--_accent-strong); }
+
+/* ------------------------------------------------------------ Collapsible */
+.fin-sim .sim-collapsible { padding: 0; overflow: hidden; }
+.fin-sim .sim-collapsible-head {
+  display: flex; align-items: center; gap: 0.85rem; width: 100%;
+  padding: 1.2rem 1.5rem; background: transparent; border: none;
+  text-align: left; cursor: pointer; color: var(--_text);
+  font-family: var(--_font); transition: background 0.15s;
+}
+.fin-sim .sim-collapsible-head:hover { background: oklch(1 0 0 / 0.02); }
+.fin-sim .sim-chevron {
+  flex: none; font-size: 1.4rem; line-height: 1; color: var(--_accent);
+  transition: transform 0.22s ease; transform: rotate(0deg);
+}
+.fin-sim .sim-chevron.open { transform: rotate(90deg); }
+.fin-sim .sim-collapsible-titles { display: flex; flex-direction: column; gap: 0.2rem; }
+.fin-sim .sim-collapsible-title { font-size: 1.05rem; font-weight: 600; }
+.fin-sim .sim-collapsible-sub {
+  font-size: 0.85rem; color: var(--_text-muted); font-variant-numeric: tabular-nums;
+}
+.fin-sim .sim-collapsible-body {
+  padding: 0 1.5rem 1.5rem; border-top: 1px solid var(--_border);
+  animation: sim-reveal 0.24s ease;
+}
+.fin-sim .sim-collapsible-body .sim-layout { margin-top: 1.3rem; }
+@keyframes sim-reveal {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Read-only derived value (retirement starting capital). */
+.fin-sim .sim-readout {
+  display: flex; flex-direction: column; gap: 0.25rem;
+  padding: 0.7rem 0.85rem; border-radius: var(--_radius-sm);
+  background: var(--_bg-deep); border: 1px solid var(--_border);
+}
+.fin-sim .sim-readout-value {
+  font-family: var(--_nums); font-size: 1.15rem; font-weight: 600;
+  font-variant-numeric: tabular-nums; color: var(--_accent-strong);
+}
+.fin-sim .sim-readout-note { font-size: 0.76rem; color: var(--_text-faint); }
+
+/* ----------------------------------------------------- Saved drawer + backdrop */
+.fin-sim .sim-backdrop {
+  position: fixed; inset: 0; z-index: 40;
+  background: oklch(0 0 0 / 0.5);
+  opacity: 0; pointer-events: none; transition: opacity 0.28s ease;
+}
+.fin-sim .sim-backdrop.open { opacity: 1; pointer-events: auto; }
+.fin-sim .sim-drawer {
+  position: fixed; top: 0; right: 0; z-index: 50;
+  height: 100%; width: min(420px, 92vw);
+  padding: 1.4rem 1.5rem; overflow-y: auto;
+  background: var(--_surface); border-left: 1px solid var(--_border);
+  box-shadow: -24px 0 60px -34px oklch(0 0 0 / 0.85);
+  transform: translateX(100%); transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.fin-sim .sim-drawer.open { transform: translateX(0); }
+.fin-sim .sim-drawer-head {
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+}
+
+.fin-sim .sim-saved-list { display: flex; flex-direction: column; gap: 0.7rem; }
+.fin-sim .sim-saved-item {
+  border: 1px solid var(--_border); border-radius: var(--_radius-sm);
+  background: var(--_bg-deep); padding: 0.85rem 0.9rem;
+}
+.fin-sim .sim-saved-name { font-size: 0.92rem; font-weight: 600; color: var(--_text); }
+.fin-sim .sim-saved-summary {
+  font-size: 0.8rem; color: var(--_text-muted);
+  margin-top: 0.25rem; font-variant-numeric: tabular-nums;
+}
+.fin-sim .sim-saved-foot {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 0.6rem; margin-top: 0.65rem; flex-wrap: wrap;
+}
+.fin-sim .sim-saved-date {
+  font-size: 0.76rem; color: var(--_text-faint); font-variant-numeric: tabular-nums;
+}
+
+/* Recharts in a dark surface (scoped). */
+.fin-sim .recharts-text { fill: var(--_text-faint); }
+.fin-sim .recharts-legend-item-text { color: var(--_text-muted) !important; font-size: 0.82rem; }
+.fin-sim .recharts-default-tooltip {
+  background: var(--_surface) !important;
+  border: 1px solid var(--_border-strong) !important;
+  border-radius: var(--_radius-sm) !important;
+  font-variant-numeric: tabular-nums;
+}
+.fin-sim .recharts-tooltip-label { color: var(--_text) !important; font-weight: 600; }
+.fin-sim .recharts-tooltip-item { color: var(--_text-muted) !important; }

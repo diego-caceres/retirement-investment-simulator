@@ -1,0 +1,80 @@
+/* ============================================================================
+   Investment Simulator — standalone design tokens.
+
+   Mirrors the "refined-financial, dark" system from the parent app so the
+   simulator looks identical here. The <Simulator> component is fully scoped
+   under .fin-sim and reads these CSS custom properties (with built-in
+   fallbacks) — this file just provides the page chrome: tokens, fonts and the
+   body background.
+   ========================================================================== */
+
+:root {
+  color-scheme: dark;
+
+  /* Warm, faintly green-tinted dark neutrals — never pure black. */
+  --bg:            oklch(0.18 0.008 155);
+  --bg-deep:       oklch(0.15 0.009 155);
+  --surface:       oklch(0.225 0.010 155);
+  --surface-2:     oklch(0.275 0.012 155);
+  --border:        oklch(0.32 0.012 155);
+  --border-strong: oklch(0.42 0.014 155);
+
+  --text:       oklch(0.95 0.008 150);
+  --text-muted: oklch(0.74 0.013 150);
+  --text-faint: oklch(0.58 0.013 150);
+
+  /* Champagne gold — brand + interactive only. */
+  --accent:        oklch(0.83 0.085 84);
+  --accent-strong: oklch(0.89 0.095 84);
+  --accent-soft:   oklch(0.83 0.085 84 / 0.13);
+  --accent-line:   oklch(0.83 0.085 84 / 0.30);
+  --on-accent:     oklch(0.24 0.03 84);
+
+  /* Data semantics (gains/losses). */
+  --pos:      oklch(0.80 0.135 158);
+  --pos-soft: oklch(0.80 0.135 158 / 0.14);
+  --neg:      oklch(0.71 0.150 32);
+  --neg-soft: oklch(0.71 0.150 32 / 0.14);
+
+  --radius:    14px;
+  --radius-sm: 9px;
+  --radius-xs: 6px;
+
+  --shadow-card:
+    0 1px 0 oklch(1 0 0 / 0.04) inset,
+    0 18px 40px -24px oklch(0 0 0 / 0.7);
+
+  --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
+  --font-body: 'Hanken Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --nums: 'Hanken Grotesk', ui-monospace, sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--text);
+  background:
+    radial-gradient(1200px 700px at 12% -8%, oklch(0.24 0.018 150 / 0.55), transparent 60%),
+    radial-gradient(900px 600px at 100% 0%, oklch(0.22 0.02 84 / 0.18), transparent 55%),
+    var(--bg);
+  background-attachment: fixed;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection { background: var(--accent-soft); color: var(--accent-strong); }
+
+/* The simulator's headings inherit the display face from the host, so mirror
+   that here (the component only sets their size/weight). */
+h1, h2 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  color: var(--text);
+}
