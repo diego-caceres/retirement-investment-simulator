@@ -353,3 +353,38 @@
 }
 .fin-sim .recharts-tooltip-label { color: var(--_text) !important; font-weight: 600; }
 .fin-sim .recharts-tooltip-item { color: var(--_text-muted) !important; }
+
+/* ----------------------------------------------------------------- Mobile
+ * En pantallas chicas el horizontal es escaso: compactamos los cards de stats
+ * a una grilla 2-up densa y le devolvemos ancho a las gráficas recortando el
+ * padding de los cards y achicando los ejes. Solo CSS, para no romper la
+ * portabilidad de la carpeta. */
+@media (max-width: 640px) {
+  .fin-sim--standalone { padding: 1.1rem 0.9rem; }
+
+  .fin-sim h1 { font-size: 1.5rem; }
+  .fin-sim .sim-header { margin-bottom: 1.1rem; }
+
+  /* Cards de números: 2 por fila, compactos. */
+  .fin-sim .sim-card-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.6rem;
+  }
+  .fin-sim .sim-card-grid .sim-card { padding: 0.8rem 0.85rem; }
+  .fin-sim .sim-stat-label { font-size: 0.62rem; letter-spacing: 0.06em; margin-bottom: 0.3rem; }
+  .fin-sim .sim-stat-value { font-size: 1.2rem; }
+  .fin-sim .sim-stat-sub { font-size: 0.72rem; margin-top: 0.2rem; }
+
+  /* Cards en general: menos padding para ganar ancho útil. */
+  .fin-sim .sim-card { padding: 1rem 0.95rem; }
+
+  /* Gráficas más cómodas: el card que las contiene apenas respira a los lados
+   * y los ejes ocupan menos, así el área de ploteo gana ancho. */
+  .fin-sim .recharts-responsive-container { height: 240px !important; }
+  .fin-sim .recharts-text { font-size: 11px; }
+  .fin-sim .recharts-cartesian-axis-tick text { font-size: 11px; }
+
+  /* Colapsable de retiro alineado al padding reducido. */
+  .fin-sim .sim-collapsible-head { padding: 1rem 0.95rem; }
+  .fin-sim .sim-collapsible-body { padding: 0 0.95rem 1rem; }
+}
