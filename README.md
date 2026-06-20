@@ -36,16 +36,40 @@ npm run build      # tsc -b + vite build → dist/
 npm run preview    # serve the production build locally
 ```
 
-## Deploy to Vercel
+## Deploy to Vercel (served under `/simulador`)
 
-The repo is preconfigured ([`vercel.json`](vercel.json)) for Vite:
+This app is meant to live at `https://diegocaceres.dev/simulador` as a **separate
+Vercel deployment**, proxied from the main site (Vercel multi-zone). To make every
+asset resolve through that proxy it is built with a base path:
 
-- **Build command:** `npm run build`
-- **Output directory:** `dist`
-- SPA rewrite to `index.html`
+- `vite.config.ts` → `base: '/simulador/'`
+- [`vercel.json`](vercel.json) maps the prefix:
+  - `/simulador/assets/*` → the physical `/assets/*` files
+  - `/simulador` and `/simulador/*` → `index.html` (SPA fallback)
+  - `/` → redirect to `/simulador`
 
-Import the repository in Vercel (or run `vercel`); the framework is auto-detected
-and the defaults above apply with no extra setup.
+Deploy steps:
+
+1. Import this repo in Vercel (framework auto-detected as Vite) and deploy. Note its
+   production domain, e.g. `investment-simulator.vercel.app`.
+2. In the **main site** (`diego-caceres-site`) `vercel.json`, add a rewrite so the
+   apex domain proxies the prefix to this deployment:
+
+   ```json
+   {
+     "rewrites": [
+       { "source": "/simulador",        "destination": "https://investment-simulator.vercel.app/simulador" },
+       { "source": "/simulador/:path*", "destination": "https://investment-simulator.vercel.app/simulador/:path*" }
+     ]
+   }
+   ```
+
+3. Redeploy the main site. `https://diegocaceres.dev/simulador` now serves this app.
+
+> Always point the rewrite at the project's **production** domain (the stable
+> `*.vercel.app`), never a per-deploy immutable URL — otherwise it pins to one build.
+> To change the path prefix, update `base` in `vite.config.ts`, the `vercel.json`
+> rewrites here, and the main-site rewrite together.
 
 ## Keeping it in sync
 
