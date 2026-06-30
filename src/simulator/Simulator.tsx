@@ -7,7 +7,11 @@ import {
   DRAWDOWN_MAX_YEARS, isValidScenario, newId, project, projectDrawdown,
   type Period, type Scenario, type SavedScenario,
 } from './projection'
-import { loadSavedScenarios, loadScenario, persistSavedScenarios, saveScenario } from './storage'
+import {
+  loadSavedScenarios, loadScenario, mergeSavedScenarios,
+  persistSavedScenarios, saveScenario, setActiveStorage,
+} from './storage'
+import { getSharedLocalStorage, inCrossOriginIframe } from './crossSiteSync'
 import './Simulator.css'
 
 // Series colors (kept local so the component carries no app dependencies).
@@ -75,6 +79,51 @@ export default function Simulator({
     () => (storageKeys ? loadSavedScenarios(storageKeys.saved) : []),
   )
   const [scenarioName, setScenarioName] = useState('')
+
+  // --- Cross-site sync ----------------------------------------------------
+  // When embedded in a cross-origin iframe, saved scenarios live in a store
+  // partitioned per embedding site. The Storage Access API can grant access to
+  // this origin's shared (unpartitioned) store so every embed + direct visit
+  // see the same scenarios. Status drives a small affordance in the drawer.
+  // 'na' = not framed / persistence off (nothing to sync, no UI).
+  const framed = useMemo(() => storageKeys != null && inCrossOriginIframe(), [storageKeys])
+  const [syncStatus, setSyncStatus] = useState<'na' | 'idle' | 'syncing' | 'on' | 'unsupported'>(
+    () => (storageKeys != null && inCrossOriginIframe() ? 'idle' : 'na'),
+  )
+
+  // Adopt the shared store: switch the storage layer to it, merge whatever was
+  // saved locally (partitioned) with what's already shared, and re-render.
+  function adoptSharedStore(shared: Storage) {
+    if (!storageKeys) return
+    const local = loadSavedScenarios(storageKeys.saved) // still the partitioned store
+    setActiveStorage(shared)
+    const remote = loadSavedScenarios(storageKeys.saved) // now reads the shared store
+    const merged = mergeSavedScenarios(remote, local)
+    persistSavedScenarios(storageKeys.saved, merged)
+    setSaved(merged)
+    setSyncStatus('on')
+  }
+
+  // On mount, try to upgrade silently — succeeds only if the permission was
+  // already granted, so no prompt appears. Otherwise we wait for a click.
+  useEffect(() => {
+    if (!framed) return
+    let cancelled = false
+    getSharedLocalStorage().then(shared => {
+      if (!cancelled && shared) adoptSharedStore(shared)
+    })
+    return () => { cancelled = true }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [framed])
+
+  // Triggered by a user gesture (button click), which the browser requires to
+  // prompt for / grant storage access.
+  async function enableSync() {
+    setSyncStatus('syncing')
+    const shared = await getSharedLocalStorage()
+    if (shared) adoptSharedStore(shared)
+    else setSyncStatus('unsupported')
+  }
 
   // Estimated annual inflation, for real-terms (today's purchasing power) figures.
   const [inflation, setInflation] = useState(seed.inflation ?? 3)
@@ -576,6 +625,31 @@ export default function Simulator({
             onClick={() => setPanelOpen(false)}
           >×</button>
         </div>
+
+        {framed && (
+          <div className="sim-sync">
+            {syncStatus === 'on' ? (
+              <span className="sim-sync-on">✓ Escenarios sincronizados entre sitios</span>
+            ) : syncStatus === 'unsupported' ? (
+              <span className="sim-sync-note">
+                Tu navegador no permite compartir escenarios entre sitios embebidos.
+                Abrí el simulador en una pestaña aparte para verlos todos juntos.
+              </span>
+            ) : (
+              <>
+                <button
+                  type="button" className="sim-btn sim-btn-secondary sim-btn-sm"
+                  onClick={enableSync} disabled={syncStatus === 'syncing'}
+                >
+                  {syncStatus === 'syncing' ? 'Sincronizando…' : 'Sincronizar entre sitios'}
+                </button>
+                <span className="sim-sync-note">
+                  Compartí estos escenarios con los otros sitios donde está embebido el simulador.
+                </span>
+              </>
+            )}
+          </div>
+        )}
 
         <div className="sim-field" style={{ marginTop: '1rem' }}>
           <label>Nombre del escenario</label>

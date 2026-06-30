@@ -162,6 +162,16 @@
 
 .fin-sim .sim-divider { height: 1px; background: var(--_border); margin: 1.3rem 0 1.1rem; }
 
+/* Cross-site sync affordance (shown only when embedded in an iframe). */
+.fin-sim .sim-sync {
+  display: flex; flex-direction: column; gap: 0.4rem;
+  margin-top: 1rem; padding: 0.75rem 0.85rem;
+  border: 1px solid var(--_border); border-radius: 10px;
+  background: var(--_bg-deep);
+}
+.fin-sim .sim-sync-note { font-size: 0.74rem; color: var(--_text-faint); line-height: 1.4; }
+.fin-sim .sim-sync-on { font-size: 0.82rem; font-weight: 600; color: var(--_pos); }
+
 /* Inline hint under a field. */
 .fin-sim .sim-hint {
   font-size: 0.74rem; color: var(--_text-faint);
